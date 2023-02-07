@@ -24,6 +24,7 @@ export default [
 		],
 		plugins: [
 			...getBaseRollupPlugin(),
+			// 打包指向
 			alias({
 				entries: {
 					hostConfig: `${pkgPath}/src/hostConfig.ts`

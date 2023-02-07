@@ -2,6 +2,7 @@ export type Container = Element;
 export type Instance = Element;
 
 export const createInstance = (type: string): Instance => {
+	// TODO: 处理 props
 	const element = document.createElement(type);
 	return element;
 };
