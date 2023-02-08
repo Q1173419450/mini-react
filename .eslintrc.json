@@ -2,7 +2,8 @@
     "env": {
         "browser": true,
         "es2021": true,
-        "node": true
+        "node": true,
+        "jest": true
     },
     "extends": [
         "eslint:recommended",
@@ -17,13 +18,15 @@
     },
     "plugins": [
         "@typescript-eslint",
-        "prettier"
+        "prettier",
+        "react-refresh"
     ],
     "rules": {
         "prettier/prettier": "error",
         "no-case-declarations": "off",
         "no-constant-condition": "off",
-        "@typescript-eslint/ban-ts-comment": "off"
+        "@typescript-eslint/ban-ts-comment": "off",
+        "react-refresh/only-export-components": "warn"
     },
     "ignorePatterns": ["**/__tests__/*.js"]
 }

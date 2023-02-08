@@ -8,6 +8,12 @@ tsconfig
 
 husky、commitlint
 
+#### 三种调试手段
+
+- 打包对应主包，使用 crate-react-app 创建一个新的 react 项目，使用 **软链接** 的调试模式进行调试（问题：每次修改代码都需要重新打包）
+- 使用 vite 进行 **热更新** 调试（问题：热更新失效问题【使用 eslint-plugin-react-refresh 解决】）
+- 使用 **测试用例** 进行测试
+
 ### jsx & 打包流程构建
 
 编译时由 Babel 完成
