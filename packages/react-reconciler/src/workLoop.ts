@@ -27,6 +27,7 @@ function markUpdateFromFiberToRoot(fiber: FiberNode) {
 }
 
 function renderRoot(root: FiberRootNode) {
+	// 创建 wip
 	prepareFreshStack(root);
 
 	do {
@@ -58,6 +59,7 @@ function commitRoot(root: FiberRootNode) {
 
 	root.finishedWork = null;
 
+	// 子树有副作用
 	const subtreeHasEffect =
 		(finishedWork.subtreeFlags & MutationMask) !== NoFlags;
 	const rootHasEffect = (finishedWork.flags & MutationMask) !== NoFlags;

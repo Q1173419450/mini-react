@@ -7,6 +7,7 @@ export class FiberNode {
 	tag: WorkTag;
 	key: Key;
 	type: any;
+	// dom
 	stateNode: any;
 
 	return: FiberNode | null;
@@ -21,9 +22,11 @@ export class FiberNode {
 	memoizeState: any;
 	updateQueue: unknown;
 
+	// fiber
 	alternate: FiberNode | null;
 	flags: Flags;
 	subtreeFlags: Flags;
+	deletions: FiberNode[] | null;
 
 	constructor(tag: WorkTag, pendingProps: Props, key: Key) {
 		// 实例
@@ -52,6 +55,7 @@ export class FiberNode {
 		// 副作用
 		this.flags = NoFlags;
 		this.subtreeFlags = NoFlags;
+		this.deletions = null;
 	}
 }
 

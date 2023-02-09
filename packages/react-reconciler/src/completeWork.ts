@@ -5,13 +5,17 @@ import {
 	Instance
 } from 'hostConfig';
 import { FiberNode } from './fiber';
-import { NoFlags } from './fiberFlags';
+import { NoFlags, Update } from './fiberFlags';
 import {
 	FunctionComponent,
 	HostComponent,
 	HostRoot,
 	HostText
 } from './workTags';
+
+function markUpdate(fiber: FiberNode) {
+	fiber.flags |= Update;
+}
 
 // 递归中的归
 export const completeWork = (wip: FiberNode) => {
@@ -35,6 +39,11 @@ export const completeWork = (wip: FiberNode) => {
 		case HostText:
 			if (current !== null && wip.stateNode) {
 				// update
+				const oldText = current.memoizeProps.content;
+				const newText = newProps.content;
+				if (oldText !== newText) {
+					markUpdate(wip);
+				}
 			} else {
 				// 1. 构建 dom
 				const instance = createTextInstance(newProps.content);
@@ -65,14 +74,10 @@ function appendAllChildren(parent: Instance, wip: FiberNode) {
 			continue;
 		}
 
-		if (node === wip) {
-			return;
-		}
+		if (node === wip) return;
 
 		while (node.sibling === null) {
-			if (node.return === null || node.return === wip) {
-				return;
-			}
+			if (node.return === null || node.return === wip) return;
 			node = node?.return;
 		}
 		node.sibling.return = node.return;

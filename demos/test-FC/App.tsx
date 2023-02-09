@@ -2,15 +2,12 @@ import React from 'react';
 import { useState } from 'react';
 
 export default function App() {
-	const [name, setName] = useState('big-react');
-	return (
-		<div>
-			<span>{name}</span>
-		</div>
-	);
+	const [num, setNum] = useState(0);
+	window.setNum = setNum;
+	return <div>{num === 3 ? <Child /> : <div>{num}</div>}</div>;
 }
 
-// function Child() {
-// 	const [name, setName] = useState('big-react');
-// 	return <span>{name}</span>;
-// }
+function Child() {
+	const [name, setName] = useState('big-react');
+	return <span>{name}</span>;
+}

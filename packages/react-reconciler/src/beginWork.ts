@@ -12,7 +12,6 @@ import {
 
 // 递归中的递
 export const beginWork = (wip: FiberNode) => {
-	console.log(12342224);
 	// 比较，返回子 fiberNode
 	switch (wip.tag) {
 		case HostRoot:
