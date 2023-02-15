@@ -9,5 +9,9 @@ export default function App() {
 
 function Child() {
 	const [name, setName] = useState('big-react');
-	return <span>{name}</span>;
+	return (
+		<span title={name} onClick={() => setName(name + 1)}>
+			{name}
+		</span>
+	);
 }

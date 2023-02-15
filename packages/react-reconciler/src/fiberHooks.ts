@@ -41,7 +41,7 @@ export function renderWithHooks(wip: FiberNode) {
 	const props = wip.pendingProps;
 	const children = Component(props);
 
-	// 重置操作
+	// 重置操作，全局变量，使用完要重置
 	currentlyRenderingFiber = null;
 	workInProgressHook = null;
 	currentHook = null;
