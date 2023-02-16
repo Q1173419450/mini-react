@@ -2,9 +2,13 @@ import React from 'react';
 import { useState } from 'react';
 
 export default function App() {
-	const [num, setNum] = useState(0);
-	window.setNum = setNum;
-	return <div>{num === 3 ? <Child /> : <div>{num}</div>}</div>;
+	const [num, setNum] = useState(1);
+	const arr =
+		num % 2 === 0
+			? [<li key="1">1</li>, <li key="2">2</li>, <li key="3">3</li>]
+			: [<li key="3">3</li>, <li key="2">2</li>, <li key="1">1</li>];
+	return <ul onClickCapture={() => setNum(num + 1)}>{arr}</ul>;
+	// return <div>{num === 3 ? <Child /> : <div>{num}</div>}</div>;
 }
 
 function Child() {

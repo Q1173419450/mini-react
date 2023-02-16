@@ -76,3 +76,33 @@ commit 阶段有三个子阶段
 - mutation 阶段
   - 突变：操作 UI 的方式、将 DOM 节点的颜色从 红色 变成 蓝色，这个过程就叫做突变
 - layout 阶段
+
+### Diff 算法
+
+`单/多节点` 是指 更新后是 `单/多节点`
+
+#### 单节点 diff 算法
+
+单节点需要支持：
+
+- 插入：placement
+- 删除：ChildDeletion
+
+> key 相同，type 相同，复用节点
+
+例如: A1 B2 C3 => A1
+
+> key 相同，type 不同，不存在复用的可能性
+
+例如: A1 B2 C3 => D1
+
+> key 不同，type 相同，无法复用
+> key 不同，type 不同，无法复用
+
+#### 多节点 diff 算法
+
+多节点需要支持:
+
+- 插入：placement
+- 删除：ChildDeletion
+- 移动：placement

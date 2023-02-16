@@ -89,6 +89,8 @@ export const createWorkInProgress = (
 		// update
 		wip.pendingProps = pendingProps;
 		wip.flags = NoFlags;
+		wip.subtreeFlags = NoFlags;
+		wip.deletions = null;
 	}
 
 	wip.type = current.type;
