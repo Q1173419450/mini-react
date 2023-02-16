@@ -1,5 +1,7 @@
-import { REACT_ELEMENT_TYPE } from 'shared/ReactSymbols';
+import { REACT_ELEMENT_TYPE, REACT_FRAGMENT_TYPE } from 'shared/ReactSymbols';
 import { Key, Props, ReactElementType, Ref, Type } from 'shared/ReactTypes';
+
+export const Fragment = REACT_FRAGMENT_TYPE;
 
 const ReactElement = function (
 	type: Type,

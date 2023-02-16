@@ -1,4 +1,4 @@
-export { jsxDEV } from './src/jsx';
+export { jsxDEV, Fragment } from './src/jsx';
 
 // export default {
 // 	version: '0.0.0',

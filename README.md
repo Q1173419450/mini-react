@@ -106,3 +106,70 @@ commit 阶段有三个子阶段
 - 插入：placement
 - 删除：ChildDeletion
 - 移动：placement
+
+### 支持 Fragment
+
+type 为 Fragment 的 ReactElement，对单一节点的 Diff 需要考虑 Fragment 的情况。
+
+> 1、Fragment 包裹其他组件
+
+```js
+<>
+	<div>1</div>
+	<div>2</div>
+</>
+
+// 对应DOM
+<div></div>
+<div></div>
+```
+
+```js
+// jsx 转换
+jsx(Fragment, {
+	children: [jsx('div', {}), jsx('div', {})]
+});
+```
+
+> 2. Fragment 与其他组件同级
+
+children 为数组类型，则进入 reconcileChildrenArray 方法，数组中的某一项为 Fragment，所以需要增加「type 为 Fragment 的 ReactElement 的判断」，同时 beginWork 中需要增加 Fragment 类型的判断。
+
+```js
+<ul>
+  <>
+    <li>1</li>
+    <li>2</li>
+  </>
+  <li>3</li>
+  <li>4</li>
+</ul>
+
+// 对应DOM
+<ul>
+  <li>1</li>
+  <li>2</li>
+  <li>3</li>
+  <li>4</li>
+</ul>
+```
+
+> 3.  数组形式的 Fragment
+
+```js
+// arr = [<li>c</li>, <li>d</li>]
+
+<ul>
+  <li>a</li>
+  <li>b</li>
+  {arr}
+</ul>
+
+// 对应DOM
+<ul>
+  <li>a</li>
+  <li>b</li>
+  <li>c</li>
+  <li>d</li>
+</ul>
+```

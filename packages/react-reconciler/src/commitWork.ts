@@ -211,21 +211,42 @@ function commitUpdate(fiber: FiberNode) {
 	}
 }
 
+// ?
+function recordHostChildrenToDelete(
+	childToDelete: FiberNode[],
+	unmountFiber: FiberNode
+) {
+	const lastOne = childToDelete[childToDelete.length - 1];
+	if (!lastOne) {
+		childToDelete.push(unmountFiber);
+	} else {
+		let node = lastOne.sibling;
+		while (node !== null) {
+			if (unmountFiber === node) {
+				childToDelete.push(unmountFiber);
+			}
+			node = node.sibling;
+		}
+	}
+}
+
 function commitDeletion(childToDelete: FiberNode) {
-	let rootHostNode: FiberNode | null = null;
+	const rootChildrenToDelete: FiberNode[] = [];
 
 	commitNestedComponent(childToDelete, (unmountFiber) => {
 		switch (unmountFiber.tag) {
 			case HostComponent:
-				if (rootHostNode === null) {
-					rootHostNode = unmountFiber;
-				}
+				// if (rootHostNode === null) {
+				// 	rootHostNode = unmountFiber;
+				// }
+				recordHostChildrenToDelete(rootChildrenToDelete, unmountFiber);
 				// TODO: 解绑 ref
 				return;
 			case HostText:
-				if (rootHostNode === null) {
-					rootHostNode = unmountFiber;
-				}
+				// if (rootHostNode === null) {
+				// 	rootHostNode = unmountFiber;
+				// }
+				recordHostChildrenToDelete(rootChildrenToDelete, unmountFiber);
 				return;
 			case FunctionComponent:
 				// TODO: useEffect unmount、解绑 ref
@@ -238,12 +259,20 @@ function commitDeletion(childToDelete: FiberNode) {
 	});
 
 	// 移除 rootHostNode 下的 dom
-	if (rootHostNode !== null) {
+	if (rootChildrenToDelete.length) {
 		const hostParent = getHostParent(childToDelete);
 		if (hostParent !== null) {
-			removeChild((rootHostNode as FiberNode).stateNode, hostParent);
+			rootChildrenToDelete.forEach((node) => {
+				removeChild(node.stateNode, hostParent);
+			});
 		}
 	}
+	// if (rootHostNode !== null) {
+	// 	const hostParent = getHostParent(childToDelete);
+	// 	if (hostParent !== null) {
+	// 		removeChild((rootHostNode as FiberNode).stateNode, hostParent);
+	// 	}
+	// }
 
 	childToDelete.return = null;
 	childToDelete.child = null;
