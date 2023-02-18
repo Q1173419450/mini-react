@@ -1,3 +1,4 @@
+import { Callback } from 'react-reconciler/src/syncTaskQueue';
 import { Props } from 'shared/ReactTypes';
 import { DOMElement, updateFiberProps } from './SyntheticEvent';
 
@@ -37,3 +38,11 @@ export function removeChild(child: Instance, container: Container) {
 }
 
 export const appendChildToContainer = appendInitialChild;
+
+// 微任务执行方式
+export const scheduleMicroTask =
+	typeof queueMicrotask === 'function'
+		? queueMicrotask
+		: typeof Promise === 'function'
+		? (callback: Callback) => Promise.resolve(null).then(callback)
+		: setTimeout;

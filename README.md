@@ -173,3 +173,84 @@ children 为数组类型，则进入 reconcileChildrenArray 方法，数组中�
   <li>d</li>
 </ul>
 ```
+
+### 批处理 同步调度
+
+react 并发更新是在宏任务中执行、同步调度是在微任务中执行
+
+- 1、定义当传入多个 update 时，update 的环状链表结构
+- 2、定义优先级 Lane 模型，在 root 中，定义未被消费 的 lane 集合：pendingLanes、本次更新消费的 lane：finishedLane
+
+为什么批处理中 performSyncWorkOnRoot 只执行了一次打印？？？？
+
+### 框架需求
+
+| 类型       | 内容                                   | 完成情况 | 在哪个版本实现的                                    |
+| ---------- | -------------------------------------- | -------- | --------------------------------------------------- |
+| React      | JSX 转换                               | ✅       | [v1](https://github.com/BetaSu/big-react/tree/v1)   |
+| React      | React.isValidElement                   | ✅       | [v4](https://github.com/BetaSu/big-react/tree/v4)   |
+| ReactDOM   | 浏览器环境 DOM 的插入                  | ✅       | [v2](https://github.com/BetaSu/big-react/tree/v2)   |
+| ReactDOM   | 浏览器环境 DOM 的移动                  | ✅       | [v7](https://github.com/BetaSu/big-react/tree/v7)   |
+| ReactDOM   | 浏览器环境 DOM 的属性变化              | ⬜️      |                                                     |
+| ReactDOM   | 浏览器环境 DOM 的删除                  | ✅       | [v5](https://github.com/BetaSu/big-react/tree/v5)   |
+| ReactDOM   | 接入 ReactTestUtils                    | ✅       | [v4](https://github.com/BetaSu/big-react/tree/v4)   |
+| ReactNoop  | ReactNoop Renderer                     | ⬜️      | [v10](https://github.com/BetaSu/big-react/tree/v10) |
+| Reconciler | Fiber 架构                             | ✅       | [v1](https://github.com/BetaSu/big-react/tree/v1)   |
+| Reconciler | 事件模型                               | ✅       | [v6](https://github.com/BetaSu/big-react/tree/v6)   |
+| Reconciler | onClick 事件支持                       | ✅       | [v6](https://github.com/BetaSu/big-react/tree/v6)   |
+| Reconciler | input 元素 onChange 事件支持           | ⬜️      |                                                     |
+| Reconciler | Lane 模型                              | ✅       | [v8](https://github.com/BetaSu/big-react/tree/v8)   |
+| Reconciler | 基础 Update 机制                       | ✅       | [v1](https://github.com/BetaSu/big-react/tree/v1)   |
+| Reconciler | 带优先级的 Update 机制                 | ✅       | [v8](https://github.com/BetaSu/big-react/tree/v8)   |
+| Reconciler | 插入单节点的 mount 流程                | ✅       | [v1](https://github.com/BetaSu/big-react/tree/v1)   |
+| Reconciler | 插入多节点的 mount 流程                | ✅       | [v7](https://github.com/BetaSu/big-react/tree/v7)   |
+| Reconciler | 插入单节点的 reconcile 流程            | ✅       | [v5](https://github.com/BetaSu/big-react/tree/v5)   |
+| Reconciler | 插入多节点的 reconcile 流程            | ✅       | [v7](https://github.com/BetaSu/big-react/tree/v7)   |
+| Reconciler | 删除节点的 reconcile 流程              | ✅       | [v5](https://github.com/BetaSu/big-react/tree/v5)   |
+| Reconciler | HostText 类型支持                      | ✅       | [v2](https://github.com/BetaSu/big-react/tree/v2)   |
+| Reconciler | HostComponent 类型支持                 | ✅       | [v1](https://github.com/BetaSu/big-react/tree/v1)   |
+| Reconciler | HostRoot 类型支持                      | ✅       | [v1](https://github.com/BetaSu/big-react/tree/v1)   |
+| Reconciler | FunctionComponent 类型支持             | ✅       | [v3](https://github.com/BetaSu/big-react/tree/v3)   |
+| React      | Hooks 架构 mount 时实现                | ✅       | [v3](https://github.com/BetaSu/big-react/tree/v3)   |
+| React      | Hooks 架构 update 时实现               | ✅       | [v5](https://github.com/BetaSu/big-react/tree/v5)   |
+| Reconciler | useState 实现                          | ✅       | [v3](https://github.com/BetaSu/big-react/tree/v3)   |
+| Reconciler | useEffect 实现                         | ⬜️      | [v9](https://github.com/BetaSu/big-react/tree/v9)   |
+| Reconciler | useRef 实现                            | ⬜️      |                                                     |
+| Reconciler | Legacy 调度流程（包含 batchedUpdates） | ✅       | [v8](https://github.com/BetaSu/big-react/tree/v8)   |
+| Reconciler | Concurrent 调度流程                    | ⬜️      | [v11](https://github.com/BetaSu/big-react/tree/v11) |
+| Reconciler | 异常处理流程                           | ⬜️      |                                                     |
+| Reconciler | useErrorBoundary 实现                  | ⬜️      |
+
+### 包含的算法
+
+#### 位运算
+
+> 或运算 |
+
+副作用的添加
+
+```js
+const Update = 0b0000010;
+const Placement = 0b0000001;
+
+let newFlags = Update | Placement; // 0b0000011
+```
+
+> 与运算、- 负号
+
+提取最右位(一正一反，取最后一位)
+
+```js
+let pendingFlags = 0b0000011;
+let newFlags = pendingFlags & -pendingFlags; // 0b0000001;
+```
+
+> 与运算、~ 取反
+
+清除取反位
+
+```js
+let pendingFlags = 0b0000011;
+const Placement = 0b0000001;
+let newFlags = pendingFlags & ~Placement; // 0b0000010
+```

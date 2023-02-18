@@ -32,9 +32,6 @@ export const completeWork = (wip: FiberNode) => {
 				1.判断 props 是否改变
 				2.变了标记 update flage
 				*/
-				if (__DEV__) {
-					console.warn('props 结构', current.memoizeProps, newProps);
-				}
 				updateFiberProps(wip.stateNode, newProps);
 				// className、style
 			} else {

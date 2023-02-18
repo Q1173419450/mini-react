@@ -10,12 +10,14 @@ import {
 } from './updateQueue';
 import { scheduleUpdateOnFiber } from './workLoop';
 import internals from 'shared/internals';
+import { Lane, NoLane, requestUpdateLanes } from './fiberLanes';
 
 const { currentDispatcher } = internals;
 
 let currentlyRenderingFiber: FiberNode | null = null;
 let workInProgressHook: Hook | null = null;
 let currentHook: Hook | null = null;
+let renderLane: Lane = NoLane;
 
 interface Hook {
 	memoizedState: any;
@@ -23,9 +25,12 @@ interface Hook {
 	next: Hook | null;
 }
 
-export function renderWithHooks(wip: FiberNode) {
+export function renderWithHooks(wip: FiberNode, lane: Lane) {
+	// 赋值
 	currentlyRenderingFiber = wip;
+	// 重置 hook
 	wip.memoizeState = null;
+	renderLane = lane;
 
 	const current = wip.alternate;
 
@@ -45,6 +50,7 @@ export function renderWithHooks(wip: FiberNode) {
 	currentlyRenderingFiber = null;
 	workInProgressHook = null;
 	currentHook = null;
+	renderLane = NoLane;
 
 	return children;
 }
@@ -113,9 +119,10 @@ function dispatchSetState<State>(
 	updateQueue: UpdateQueue<State>,
 	action: Action<State>
 ) {
-	const update = createUpdate(action);
+	const lane = requestUpdateLanes();
+	const update = createUpdate(action, lane);
 	enqueueUpdate(updateQueue, update);
-	scheduleUpdateOnFiber(fiber);
+	scheduleUpdateOnFiber(fiber, lane);
 }
 
 function updateState<State>(): [State, Dispatch<State>] {
@@ -124,11 +131,13 @@ function updateState<State>(): [State, Dispatch<State>] {
 	// 计算新 state 的逻辑
 	const queue = hook.updateQueue as UpdateQueue<State>;
 	const pendingUpdate = queue.shared.pending;
+	queue.shared.pending = null;
 
 	if (pendingUpdate !== null) {
 		const { memoizedState } = processUpdateQueue(
 			hook.memoizedState,
-			pendingUpdate
+			pendingUpdate,
+			renderLane
 		);
 		hook.memoizedState = memoizedState;
 	}

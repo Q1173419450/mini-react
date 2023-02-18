@@ -7,6 +7,7 @@ import {
 	HostComponent,
 	WorkTag
 } from './workTags';
+import { Lane, Lanes, NoLane, NoLanes } from './fiberLanes';
 
 export class FiberNode {
 	tag: WorkTag;
@@ -69,11 +70,16 @@ export class FiberRootNode {
 	current: FiberNode;
 	// 递归完成，标记更新的 FiberNode 中
 	finishedWork: FiberNode | null;
+	pendingLanes: Lanes;
+	finishedLane: Lane;
 	constructor(container: Container, hostRootFiber: FiberNode) {
 		this.container = container;
 		this.current = hostRootFiber;
 		hostRootFiber.stateNode = this;
 		this.finishedWork = null;
+
+		this.pendingLanes = NoLanes;
+		this.finishedLane = NoLane;
 	}
 }
 
