@@ -62,7 +62,7 @@ function performSyncWorkOnRoot(root: FiberRootNode, lane: Lane) {
 	const nextLane = getHighestPriorityLane(root.pendingLanes);
 
 	if (nextLane !== SyncLane) {
-		ensureRootIsScheduled(root);
+		// ensureRootIsScheduled(root);
 		return;
 	}
 

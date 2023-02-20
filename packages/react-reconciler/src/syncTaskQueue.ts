@@ -20,6 +20,7 @@ export function flushSyncCallbacks() {
 				console.error('flushSyncCallbacks 报错', error);
 			}
 		} finally {
+			syncQueue = null;
 			isFlushingSync = false;
 		}
 	}
