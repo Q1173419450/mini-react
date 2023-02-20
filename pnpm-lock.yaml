@@ -14,6 +14,7 @@ importers:
       '@rollup/plugin-replace': ^5.0.2
       '@types/react': ^18.0.27
       '@types/react-dom': ^18.0.10
+      '@types/scheduler': ^0.16.2
       '@typescript-eslint/eslint-plugin': ^5.47.0
       '@typescript-eslint/parser': ^5.47.0
       '@vitejs/plugin-react': ^3.1.0
@@ -31,6 +32,7 @@ importers:
       rollup: ^3.7.5
       rollup-plugin-generate-package-json: ^3.2.0
       rollup-plugin-typescript2: ^0.34.1
+      scheduler: ^0.23.0
       typescript: ^4.9.4
       vite: ^4.1.0
     dependencies:
@@ -39,6 +41,7 @@ importers:
       '@types/react': 18.0.27
       '@types/react-dom': 18.0.10
       '@vitejs/plugin-react': 3.1.0_vite@4.1.1
+      scheduler: 0.23.0
       vite: 4.1.1
     devDependencies:
       '@babel/core': 7.20.12
@@ -47,6 +50,7 @@ importers:
       '@commitlint/cli': 17.3.0
       '@commitlint/config-conventional': 17.3.0
       '@rollup/plugin-commonjs': 24.0.0_rollup@3.7.5
+      '@types/scheduler': 0.16.2
       '@typescript-eslint/eslint-plugin': 5.47.0_68988f35c0cc76dc825f4df0a4488ac3
       '@typescript-eslint/parser': 5.47.0_eslint@8.30.0+typescript@4.9.4
       commitlint: 17.3.0
@@ -2198,7 +2202,6 @@ packages:
 
   /@types/scheduler/0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
-    dev: false
 
   /@types/semver/7.3.13:
     resolution: {integrity: sha512-21cFJr9z3g5dW8B0CVI9g2O9beqaThGQ6ZFBqHfwhzLDKUxaqTIy3vnfah/UPkfOiF2pLq+tGz+W8RyCskuslw==}
@@ -4424,6 +4427,13 @@ packages:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
     dev: true
 
+  /loose-envify/1.4.0:
+    resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
+    hasBin: true
+    dependencies:
+      js-tokens: 4.0.0
+    dev: false
+
   /lru-cache/5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
     dependencies:
@@ -5053,6 +5063,12 @@ packages:
     dependencies:
       xmlchars: 2.2.0
     dev: true
+
+  /scheduler/0.23.0:
+    resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
+    dependencies:
+      loose-envify: 1.4.0
+    dev: false
 
   /semver/5.7.1:
     resolution: {integrity: sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==}

@@ -183,6 +183,27 @@ react 并发更新是在宏任务中执行、同步调度是在微任务中执�
 
 为什么批处理中 performSyncWorkOnRoot 只执行了一次打印？？？？
 
+### 实现 useEffect
+
+- effect 数据结构
+  - 不同 effect 公用一套结构：tag
+  - 保存依赖：deps
+  - 保存 create 回调
+  - 保存 destroy 回调
+  - 是否触发 create 回调
+    - mount 时候
+    - 依赖变化时
+
+```js
+const effect = {
+	tag: ,
+	create,
+	destroy,
+	deps,
+	next: 与其他 effect 连成链表
+};
+```
+
 ### 框架需求
 
 | 类型       | 内容                                   | 完成情况 | 在哪个版本实现的                                    |

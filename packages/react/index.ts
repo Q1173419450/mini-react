@@ -1,4 +1,5 @@
 import { REACT_ELEMENT_TYPE } from 'shared/ReactSymbols';
+import { isObject } from 'shared/utils';
 import currentDispatcher, {
 	Dispatcher,
 	resolveDispatcher
@@ -10,12 +11,13 @@ export const useState: Dispatcher['useState'] = (initialState) => {
 	return dispatcher.useState(initialState);
 };
 
+export const useEffect: Dispatcher['useEffect'] = (callback, deps) => {
+	const dispatcher = resolveDispatcher();
+	return dispatcher.useEffect(callback, deps);
+};
+
 export function isValidElement(object: any) {
-	return (
-		typeof object === 'object' &&
-		object !== null &&
-		object.$$typeof === REACT_ELEMENT_TYPE
-	);
+	return isObject(object) && object.$$typeof === REACT_ELEMENT_TYPE;
 }
 
 // 内部数据共享层
