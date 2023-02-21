@@ -4,7 +4,6 @@ import {
 	appendInitialChild,
 	Instance
 } from 'hostConfig';
-import { updateFiberProps } from 'react-dom/src/SyntheticEvent';
 import { FiberNode } from './fiber';
 import { NoFlags, Update } from './fiberFlags';
 import {
@@ -32,7 +31,10 @@ export const completeWork = (wip: FiberNode) => {
 				1.判断 props 是否改变
 				2.变了标记 update flage
 				*/
-				updateFiberProps(wip.stateNode, newProps);
+				markUpdate(wip);
+				//逻辑收敛、reconciler 是与环境无关的包
+				// updateFiberProps(wip.stateNode, newProps);
+
 				// className、style
 			} else {
 				// mount

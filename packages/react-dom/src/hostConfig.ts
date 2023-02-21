@@ -1,4 +1,6 @@
+import { FiberNode } from 'react-reconciler/src/fiber';
 import { Callback } from 'react-reconciler/src/syncTaskQueue';
+import { HostComponent, HostText } from 'react-reconciler/src/workTags';
 import { Props } from 'shared/ReactTypes';
 import { DOMElement, updateFiberProps } from './SyntheticEvent';
 
@@ -28,6 +30,21 @@ export const insertChildToContainer = (
 export const createTextInstance = (content: string) => {
 	return document.createTextNode(content);
 };
+
+export function commitUpdate(fiber: FiberNode) {
+	switch (fiber.tag) {
+		case HostText:
+			const text = fiber.memoizeProps.content;
+			return commitTextUpdate(fiber.stateNode, text);
+		case HostComponent:
+			return updateFiberProps(fiber.stateNode, fiber.memoizeProps);
+		default:
+			if (__DEV__) {
+				console.warn('未实现的 Update 类型', fiber);
+			}
+			break;
+	}
+}
 
 export function commitTextUpdate(textInstance: TextInstance, content: string) {
 	textInstance.textContent = content;

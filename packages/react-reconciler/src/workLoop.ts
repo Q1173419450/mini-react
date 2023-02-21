@@ -160,9 +160,6 @@ function commitRoot(root: FiberRootNode) {
 }
 
 function flushPassiveEffects(pendingPassiveEffects: PendingPassiveEffects) {
-	if (__DEV__) {
-		console.log(pendingPassiveEffects);
-	}
 	pendingPassiveEffects.unmount.forEach((effect: Effect) => {
 		commitHookEffectListUnmount(Passive, effect);
 	});

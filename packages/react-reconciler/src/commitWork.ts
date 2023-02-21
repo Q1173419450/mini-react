@@ -1,6 +1,6 @@
 import {
 	appendChildToContainer,
-	commitTextUpdate,
+	commitUpdate,
 	Container,
 	insertChildToContainer,
 	Instance,
@@ -210,19 +210,6 @@ function insertOrAppendPlacementNodeIntoContainer(
 			insertOrAppendPlacementNodeIntoContainer(sibling, hostParent, before);
 			sibling = sibling.sibling;
 		}
-	}
-}
-
-function commitUpdate(fiber: FiberNode) {
-	switch (fiber.tag) {
-		case HostText:
-			const text = fiber.memoizeProps.content;
-			return commitTextUpdate(fiber.stateNode, text);
-		default:
-			if (__DEV__) {
-				console.warn('未实现的 Update 类型', fiber);
-			}
-			break;
 	}
 }
 
