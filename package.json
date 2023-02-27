@@ -8,6 +8,8 @@
     "build:dev": "rimraf dist && rollup --bundleConfigAsCjs --config scripts/rollup/dev.config.js",
     "test-fc": "vite serve demos/test-fc --config scripts/vite/vite.config.js --force --open",
     "test-effect": "vite serve demos/test-effect --config scripts/vite/vite.config.js --force --open",
+    "test-work": "vite serve demos/test-work --config scripts/vite/vite.config.js --force --open",
+    "test-concurrent": "vite serve demos/test-concurrent --config scripts/vite/vite.config.js --force --open",
     "test": "jest --config scripts/jest/jest.config.js"
   },
   "author": "",

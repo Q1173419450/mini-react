@@ -6,6 +6,7 @@ import {
 	createUpdateQueue,
 	enqueueUpdate,
 	processUpdateQueue,
+	Update,
 	UpdateQueue
 } from './updateQueue';
 import { scheduleUpdateOnFiber } from './workLoop';
@@ -24,6 +25,8 @@ let renderLane: Lane = NoLane;
 interface Hook {
 	memoizedState: any;
 	updateQueue: any;
+	baseState: any;
+	baseQueue: Update<any> | null;
 	next: Hook | null;
 }
 
@@ -210,6 +213,8 @@ function mountWorkInProgressHook(): Hook {
 	const hook: Hook = {
 		memoizedState: null,
 		updateQueue: null,
+		baseQueue: null,
+		baseState: null,
 		next: null
 	};
 
@@ -246,16 +251,31 @@ function updateState<State>(): [State, Dispatch<State>] {
 	const hook = updateWorkInProgress();
 	// 计算新 state 的逻辑
 	const queue = hook.updateQueue as UpdateQueue<State>;
+	const baseState = hook.baseState;
+	const current = currentHook as Hook;
+	let baseQueue = current.baseQueue;
 	const pendingUpdate = queue.shared.pending;
-	queue.shared.pending = null;
 
 	if (pendingUpdate !== null) {
-		const { memoizedState } = processUpdateQueue(
-			hook.memoizedState,
-			pendingUpdate,
-			renderLane
-		);
-		hook.memoizedState = memoizedState;
+		if (baseQueue !== null) {
+			const baseFirst = baseQueue.next;
+			const pendingFirst = pendingUpdate.next;
+			baseQueue.next = pendingFirst;
+			pendingUpdate.next = baseFirst;
+		}
+		baseQueue = pendingUpdate;
+		current.baseQueue = pendingUpdate;
+		queue.shared.pending = null;
+		if (baseQueue !== null) {
+			const {
+				memoizedState,
+				baseQueue: newBaseQueue,
+				baseState: newBaseState
+			} = processUpdateQueue(baseState, baseQueue, renderLane);
+			hook.memoizedState = memoizedState;
+			hook.baseQueue = newBaseQueue;
+			hook.baseState = newBaseState;
+		}
 	}
 	return [hook.memoizedState, queue.dispatch as Dispatch<State>];
 }
@@ -293,6 +313,8 @@ function updateWorkInProgress(): Hook {
 	const newHook: Hook = {
 		memoizedState: currentHook.memoizedState,
 		updateQueue: currentHook.updateQueue,
+		baseState: currentHook.baseState,
+		baseQueue: currentHook.baseQueue,
 		next: null
 	};
 	if (workInProgressHook === null) {
