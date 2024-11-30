@@ -13,7 +13,15 @@ import {
 } from './workTags';
 
 // 递归中的递
+/* 
+	1、根据 reactElement 创建 fiber
+	2、update 时，给已变化的 fiber 打上 flag
+	3、执行 diff
+*/
 export const beginWork = (wip: FiberNode, renderLane: Lane) => {
+	if (__DEV__) {
+		console.warn('%c begin work 的开始', 'color:#7FFFD4;', wip);
+	}
 	// 比较，返回子 fiberNode
 	switch (wip.tag) {
 		case HostRoot:
@@ -73,7 +81,7 @@ function reconcileChildren(wip: FiberNode, children?: ReactElementType) {
 	if (current !== null) {
 		// update
 		// 比较的双方
-		wip.child = reconcileChildFiber(wip, current?.child, children);
+		wip.child = reconcileChildFiber(wip, current.child, children);
 	} else {
 		// mount
 		// 插入大量节点

@@ -63,6 +63,9 @@ function commitMutationEffectOnFiber(
 ) {
 	const flags = finishedWork.flags;
 	if ((flags & Placement) !== NoFlags) {
+		if (__DEV__) {
+			console.warn('%c 执行 Placement 操作', 'color:#008B45;', finishedWork);
+		}
 		commitPlacement(finishedWork);
 		// 0b001 0b001 => 0b000
 		finishedWork.flags &= ~Placement;
@@ -70,12 +73,19 @@ function commitMutationEffectOnFiber(
 
 	// flags Update
 	if ((flags & Update) !== NoFlags) {
+		if (__DEV__) {
+			console.warn('%c 执行 Update 操作', 'color:	#00EE00;', finishedWork);
+		}
 		commitUpdate(finishedWork);
 		finishedWork.flags &= ~Update;
 	}
 	// flags ChildDeletion
 	if ((flags & ChildDeletion) !== NoFlags) {
 		const deletions = finishedWork.deletions;
+		if (__DEV__) {
+			console.warn('%c 执行 ChildDeletion 操作', 'color: red;', deletions);
+		}
+
 		if (deletions !== null) {
 			deletions.forEach((childToDelete: FiberNode) => {
 				commitDeletion(childToDelete, root);
@@ -91,10 +101,6 @@ function commitMutationEffectOnFiber(
 }
 
 function commitPlacement(finishedWork: FiberNode) {
-	if (__DEV__) {
-		console.warn('执行 Placement 操作', finishedWork);
-	}
-
 	// parent DOM
 	const hostParent = getHostParent(finishedWork);
 

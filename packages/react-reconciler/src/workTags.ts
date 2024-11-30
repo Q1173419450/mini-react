@@ -6,6 +6,7 @@ export type WorkTag =
 	| typeof Fragment;
 
 export const FunctionComponent = 0;
+// rootElement
 export const HostRoot = 3;
 // <div>
 export const HostComponent = 5;

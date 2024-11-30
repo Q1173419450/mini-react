@@ -211,7 +211,11 @@ function renderRoot(root: FiberRootNode, lane: Lane, shouldTimeSlice: boolean) {
 }
 
 function commitRoot(root: FiberRootNode) {
+	if (__DEV__) {
+		console.warn('%c commit 阶段开始：', 'color:#00EE76;', root.finishedWork);
+	}
 	const finishedWork = root.finishedWork;
+
 	const lane = root.finishedLane;
 
 	if (finishedWork === null) return;
@@ -219,16 +223,12 @@ function commitRoot(root: FiberRootNode) {
 		console.warn('commit 阶段 finishedLane 不应该是 NoLane');
 	}
 
-	if (__DEV__) {
-		console.warn('commit 阶段开始', finishedWork);
-	}
-
 	root.finishedWork = null;
 	root.finishedLane = NoLane;
 
 	markRootFinished(root, lane);
 
-	// effect
+	// 调用 effect
 	const subtreeHasEffect =
 		(finishedWork.subtreeFlags & PassiveMask) !== NoFlags;
 	const rootHasEffect = (finishedWork.flags & PassiveMask) !== NoFlags;

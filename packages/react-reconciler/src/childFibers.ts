@@ -120,6 +120,7 @@ function ChildReconciler(shouldTrackEffects: boolean) {
 
 	// 插入
 	function placeSingleChild(fiber: FiberNode) {
+		// mount 时 root fiber alternate 是有值的
 		if (shouldTrackEffects && fiber.alternate === null) {
 			fiber.flags |= Placement;
 		}
@@ -271,10 +272,10 @@ function ChildReconciler(shouldTrackEffects: boolean) {
 			isObject(newChild) &&
 			newChild.type === REACT_FRAGMENT_TYPE &&
 			newChild.key === null;
-
 		if (isUnKeyedTopLevelFragment) {
 			newChild = newChild.props.children;
 		}
+
 		// element
 		if (typeof newChild === 'object' && newChild !== null) {
 			if (Array.isArray(newChild)) {

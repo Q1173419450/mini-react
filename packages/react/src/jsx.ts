@@ -1,10 +1,17 @@
 import { REACT_ELEMENT_TYPE, REACT_FRAGMENT_TYPE } from 'shared/ReactSymbols';
-import { Key, Props, ReactElementType, Ref, Type } from 'shared/ReactTypes';
+import {
+	Key,
+	Props,
+	ReactElementType,
+	Ref,
+	ElementType
+} from 'shared/ReactTypes';
+import { isObject } from 'shared/utils';
 
 export const Fragment = REACT_FRAGMENT_TYPE;
 
 const ReactElement = function (
-	type: Type,
+	type: ElementType,
 	key: Key,
 	ref: Ref,
 	props: Props
@@ -21,7 +28,11 @@ const ReactElement = function (
 	return element;
 };
 
-export const jsx = (type: Type, config: any, ...maybeChildren: any) => {
+export const createElement = (
+	type: ElementType,
+	config: any,
+	...maybeChildren: any
+) => {
 	let key: Key = null;
 	let ref: Ref = null;
 	const props: Props = {};
@@ -58,10 +69,14 @@ export const jsx = (type: Type, config: any, ...maybeChildren: any) => {
 	return ReactElement(type, key, ref, props);
 };
 
-export const jsxDEV = (type: Type, config: any) => {
+export const jsx = (type: ElementType, config: any, maybeKey: any) => {
 	let key: Key = null;
 	let ref: Ref = null;
 	const props: Props = {};
+
+	if (maybeKey !== undefined) {
+		key = '' + maybeKey;
+	}
 
 	for (const prop in config) {
 		const val = config[prop];
@@ -86,3 +101,9 @@ export const jsxDEV = (type: Type, config: any) => {
 
 	return ReactElement(type, key, ref, props);
 };
+
+export function isValidElement(object: any) {
+	return isObject(object) && object.$$typeof === REACT_ELEMENT_TYPE;
+}
+
+export const jsxDEV = jsx;

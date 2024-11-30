@@ -157,7 +157,7 @@ children 为数组类型，则进入 reconcileChildrenArray 方法，数组中�
 > 3.  数组形式的 Fragment
 
 ```js
-// arr = [<li>c</li>, <li>d</li>]
+arr = [<li>c</li>, <li>d</li>]
 
 <ul>
   <li>a</li>

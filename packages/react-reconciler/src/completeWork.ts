@@ -19,7 +19,11 @@ function markUpdate(fiber: FiberNode) {
 }
 
 // 递归中的归
+// 执行更新的冒泡、元素的创建
 export const completeWork = (wip: FiberNode) => {
+	if (__DEV__) {
+		console.warn('%c completeWork 开始：', 'color:#00BFFF;', wip);
+	}
 	const newProps = wip.pendingProps;
 	const current = wip.alternate;
 
